@@ -62,3 +62,16 @@ See the [LICENSE](LICENSE) file for more details.
 ## Author
 Developed by **Samuele Mancuso**  
 GitHub: [AllWorkNoPlay-95](https://github.com/AllWorkNoPlay-95)
+
+---
+
+## For Recruiters
+This project demonstrates proficiency in the following technical areas:
+
+- **Python Programming**: Writing clean, modular, and reusable code for task automation and data processing.
+- **WordPress Development**: Integrating with WP-CLI to interact programmatically with WordPress and WooCommerce.
+- **JSON Parsing and Manipulation**: Extracting, transforming, and utilizing structured data from various sources.
+- **Command Line Automation**: Executing and processing system commands efficiently for dynamic menu generation.
+- **Data Structures and Algorithms**: Creating hierarchical structures and sorting algorithms to map complex relationships like nested product categories.
+- **Error Handling and Debugging**: Implementing robust error-handling mechanisms to manage cache misses and inconsistencies.
+- **Optimization and Scalability**: Designing the script to handle large datasets and multiple levels of hierarchy while maintaining performance.
