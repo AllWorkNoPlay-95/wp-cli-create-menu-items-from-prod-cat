@@ -7,153 +7,12 @@ import os
 import json
 import argparse
 from pprint import pprint
+from config import main_menu_id, max_order_position, custom_parents, menu_icons, category_slugs_to_skip
 
 # Globals
-main_menu_id = "megacategories"
 menu_items_cache = []
 parents_to_put_in_other = []
 args = []
-max_order_position = 999990
-custom_parents = [  # Parent title: Child slug # TODO: load from external file for modularity
-    {
-        "name": "Altro",
-        "custom_order": max_order_position + 1,
-        "children_slugs": [
-            "macchine-per-lufficio",
-            "catering",
-            "sicurezza-e-magazzino",
-            "pulizia-e-igiene",
-            "elettronica-e-informatica",
-            "espositori-e-lavagne",
-            "articoli-diversi"
-        ]
-    }
-]
-menu_icons = [
-    # Make the top level menus have an icon (Font Awesome in this case) # TODO: load from external file for modularity
-    {"name": "Archiviazione", "slug": "archiviazione", "icon": "fa-solid fa-cabinet-filing fa6"},
-    {"name": "Buste spedizioni ed etichette", "slug": "buste-spedizioni-ed-etichette", "icon": "fas fa-envelope"},
-    {"name": "Cancelleria e ufficio", "slug": "cancelleria-e-ufficio", "icon": "fas fa-paperclip"},
-    {"name": "Carta e cartoncini", "slug": "carta-e-cartoncini", "icon": "fas fa-copy"},
-    {"name": "Cartoleria e scuola", "slug": "cartoleria-e-scuola", "icon": "fas fa-school"},
-    {"name": "0", "slug": "0", "icon": "fas fa-ellipsis-h"},
-    {"name": "Scrittura e correzione", "slug": "scrittura-e-correzione", "icon": "fas fa-pencil-ruler"},
-    {"name": "Macchine per l'ufficio", "slug": "macchine-per-lufficio", "icon": "fas fa-calculator"},
-    {"name": "Catering", "slug": "catering", "icon": "fa-solid fa-plate-utensils fa6"},
-    {"name": "Sicurezza e magazzino", "slug": "sicurezza-e-magazzino", "icon": "fas fa-hard-hat"},
-    {"name": "Elettronica e informatica", "slug": "elettronica-e-informatica", "icon": "fas fa-microchip"},
-    {"name": "Espositori e lavagne", "slug": "espositori-e-lavagne", "icon": "fas fa-chalkboard"},
-    {"name": "Articoli diversi", "slug": "articoli-diversi", "icon": "fas fa-ellipsis-h"},
-    {"name": "Cartelle e cartelline", "slug": "cartelle-e-cartelline", "icon": "far fa-folder-open fa6"},
-    {"name": "Buste in plastica", "slug": "buste-in-plastica", "icon": "fas fa-sheet-plastic fa6"},
-    {"name": "Buste", "slug": "buste", "icon": "fas fa-envelopes-bulk fa6"},
-    {"name": "Carta per fotocopie e stampanti", "slug": "carta-per-fotocopie-e-stampanti", "icon": "fas fa-print fa6"},
-    {"name": "Carta e cartoncino colorato", "slug": "carta-e-cartoncino-colorato", "icon": "far fa-file fa6"},
-    {"name": "Carta in rotoli e termica", "slug": "carta-in-rotoli-e-termica",
-     "icon": "fa-solid fa-toilet-paper-blank fa6"},
-    {"name": "Pile, batterie, e torce", "slug": "pile-batterie-e-torce", "icon": "fas fa-car-battery fa6"},
-    {"name": "Articoli diversi", "slug": "articoli-diversi-articoli-diversi", "icon": "fas fa-ellipsis fa6"},
-    {"name": "Portatessere e braccialetti identificativi", "slug": "portatessere-e-braccialetti-identificativi",
-     "icon": "far fa-id-badge fa6"},
-    {"name": "Bacheche, pannelli e planning", "slug": "bacheche-pannelli-e-planning", "icon": "fas fa-chalkboard fa6"},
-    {"name": "Espositori pubblicitari, portadepliants, portabrochure",
-     "slug": "espositori-pubblicitari-portadepliants-portabrochure", "icon": "fa-solid fa-billboard fa6"},
-    {"name": "Borse, zaini, trolley, e portafogli", "slug": "borse-zaini-trolley-e-portafogli",
-     "icon": "fa-solid fa-backpack fa6"},
-    {"name": "Cutter, forbici e taglierine", "slug": "cutter-forbici-e-taglierine", "icon": "fas fa-scissors fa6"},
-    {"name": "Nastri adesivi", "slug": "nastri-adesivi-cancelleria-e-ufficio", "icon": "fas fa-tape fa6"},
-    {"name": "Modulistica", "slug": "modulistica", "icon": "fa-solid fa-memo-pad fa6"},
-    {"name": "Agende e calendari", "slug": "agende-e-calendari", "icon": "far fa-calendar-days fa6"},
-    {"name": "Timbri", "slug": "timbri", "icon": "fas fa-stamp fa6"},
-    {"name": "Evidenziatori", "slug": "evidenziatori", "icon": "fas fa-highlighter fa6"},
-    {"name": "Matite portamine", "slug": "matite-portamine", "icon": "fa-solid fa-pencil-mechanical fa6"},
-    {"name": "Gomme e gommini", "slug": "gomme-e-gommini", "icon": "fas fa-eraser fa6"},
-    {"name": "Matite e pastelli", "slug": "matite-e-pastelli", "icon": "fas fa-pencil fa6"},
-    {"name": "Marcatori e pennarelli indelebili", "slug": "marcatori-e-pennarelli-indelebili",
-     "icon": "fa-solid fa-paintbrush-pencil fa6"},
-    {"name": "Penne e refil", "slug": "penne-e-refil", "icon": "fas fa-pen-clip fa6"},
-    {"name": "Pittura", "slug": "pittura", "icon": "fas fa-palette fa6"},
-    {"name": "Registri e rubriche", "slug": "registri-e-rubriche", "icon": "far fa-address-book fa6"},
-    {"name": "Cucitrici, pinzatrici e levapunti", "slug": "cucitrici-pinzatrici-e-levapunti",
-     "icon": "fas fa-stapler fa6"},
-    {"name": "Accessori da scrivania", "slug": "accessori-da-scrivania", "icon": "fas fa-magnifying-glass fa6"},
-    {"name": "Elastici, fermagli, puntine e fermacarte", "slug": "elastici-fermagli-puntine-e-fermacarte",
-     "icon": "fas fa-thumbtack fa6"},
-    {"name": "Composizione creativa", "slug": "composizione-creativa", "icon": "fa-solid fa-hammer-brush fa6"},
-    {"name": "Blocchetti memo e segnapagina", "slug": "blocchetti-memo-e-segnapagina",
-     "icon": "far fa-note-sticky fa6"},
-    {"name": "Carta per il ricalco", "slug": "carta-per-il-ricalco", "icon": "far fa-copy fa6"},
-    {"name": "Carta per plotter", "slug": "carta-per-plotter", "icon": "fas fa-tape fa6"},
-    {"name": "Articoli da regalo e borse shopper", "slug": "articoli-da-regalo-e-borse-shopper",
-     "icon": "fas fa-gift fa6"},
-    {"name": "Colle", "slug": "colle", "icon": "fas fa-droplet fa6"},
-    {"name": "Portablocchi, block notes e taccuini", "slug": "portablocchi-block-notes-e-taccuini",
-     "icon": "fa-solid fa-memo-pad fa6"},
-    {"name": "Perforatori", "slug": "perforatori", "icon": "far fa-circle fa6"},
-    {"name": "Giochi, musica, e articoli per l'infanzia", "slug": "giochi-musica-e-articoli-per-linfanzia",
-     "icon": "fa-solid fa-teddy-bear fa6"},
-    {"name": "Quaderni per la scuola", "slug": "quaderni-per-la-scuola", "icon": "fa-solid fa-notebook fa6"},
-    {"name": "Album e blocchi da disegno", "slug": "album-e-blocchi-da-disegno", "icon": "fas fa-file-pen fa6"},
-    {"name": "Calcolatrici scuola", "slug": "calcolatrici-scuola", "icon": "fas fa-calculator fa6"},
-    {"name": "Gomme scolastiche", "slug": "gomme-scolastiche", "icon": "fas fa-eraser fa6"},
-    {"name": "Nastri adesivi e dispenser", "slug": "nastri-adesivi-e-dispenser", "icon": "fas fa-tape fa6"},
-    {"name": "Quaderni ad anelli e ricambi", "slug": "quaderni-ad-anelli-e-ricambi",
-     "icon": "fa-solid fa-notebook fa6"},
-    {"name": "Valigette e tubi porta disegni", "slug": "valigette-e-tubi-porta-disegni",
-     "icon": "fas fa-briefcase fa6"},
-    {"name": "Zaini e astucci", "slug": "zaini-e-astucci", "icon": "fa-solid fa-backpack fa6"},
-    {"name": "Blocchetti memo", "slug": "blocchetti-memo", "icon": "far fa-note-sticky fa6"},
-    {"name": "Colle stick, glitter e vinavil", "slug": "colle-stick-glitter-e-vinavil", "icon": "fas fa-droplet fa6"},
-    {"name": "Didattica", "slug": "didattica", "icon": "fas fa-chalkboard-user fa6"},
-    {"name": "Forbici", "slug": "forbici", "icon": "fas fa-scissors fa6"},
-    {"name": "Pennarelli scuola", "slug": "pennarelli-scuola", "icon": "fas fa-pen fa6"},
-    {"name": "Calcolatrici", "slug": "calcolatrici", "icon": "fas fa-calculator fa6"},
-    {"name": "Distruggi documenti", "slug": "distruggi-documenti", "icon": "fa-solid fa-shredder fa6"},
-    {"name": "Plastificatrici a caldo e a freddo, Pouches", "slug": "plastificatrici-a-caldo-e-a-freddo-pouches",
-     "icon": "fa-solid fa-scanner-image fa6"},
-    {"name": "Rilegatrici, dorsi e copertine", "slug": "rilegatrici-dorsi-e-copertine", "icon": "fas fa-book-open fa6"},
-    {"name": "Prodotti per il catering", "slug": "prodotti-per-il-catering", "icon": "fas fa-utensils fa6"},
-    {"name": "Sicurezza e verifica dei valori", "slug": "sicurezza-e-verifica-dei-valori",
-     "icon": "fas fa-shield-halved fa6"},
-    {"name": "Articoli per manutenzione", "slug": "articoli-per-manutenzione", "icon": "fa-solid fa-wrench-simple fa6"},
-    {"name": "Pistole sparafili e consumabili", "slug": "pistole-sparafili-e-consumabili",
-     "icon": "fa-solid fa-gun-squirt fa6"},
-    {"name": "Forme e stampi", "slug": "forme-e-stampi", "icon": "fa-solid fa-star-circle fa6"},
-    {"name": "Polveri, sabbie, scaglie e bande per il modellaggio",
-     "slug": "polveri-sabbie-scaglie-e-bande-per-il-modellaggio", "icon": "fa-solid fa-grid-round-5 fa6"},
-    {"name": "Carta e cartoncino", "slug": "carta-e-cartoncino", "icon": "far fa-file fa6"},
-    {"name": "Incisione, stampa artistiche e decorazioni", "slug": "incisione-stampa-artistiche-e-decorazioni",
-     "icon": "fa-solid fa-sparkles fa6"},
-    {"name": "Materiali da disegno e pittura", "slug": "materiali-da-disegno-e-pittura",
-     "icon": "fa-solid fa-paintbrush-pencil fa6"},
-    {"name": "Matite scolastiche", "slug": "matite-scolastiche", "icon": "fa-solid fa-pencil-mechanical fa6"},
-    {"name": "Plastiline modellabili", "slug": "plastiline-modellabili", "icon": "fas fa-disease fa6"},
-    {"name": "Penne scolastiche", "slug": "penne-scolastiche", "icon": "fas fa-pen-clip fa6"},
-    {"name": "Lavagnette, gessetti e cancellini", "slug": "lavagnette-gessetti-e-cancellini",
-     "icon": "fas fa-chalkboard fa6"},
-    {"name": "Articoli per il disegno tecnico", "slug": "articoli-per-il-disegno-tecnico",
-     "icon": "fas fa-compass-drafting fa6"},
-    {"name": "Correttori e sbianchetti", "slug": "correttori-e-sbianchetti", "icon": "fas fa-broom fa6"},
-    {"name": "Disegno", "slug": "disegno", "icon": "fas fa-pen-ruler fa6"},
-    {"name": "Coloranti", "slug": "coloranti", "icon": "fas fa-eye-dropper fa6"},
-    {"name": "Classificatori per ufficio", "slug": "classificatori-per-ufficio", "icon": "fas fa-inbox fa6"},
-    {"name": "Evidenziatori", "slug": "evidenziatori-cartoleria-e-scuola", "icon": "fas fa-highlighter fa6"},
-    {"name": "Correttori e bianchetti", "slug": "correttori-e-bianchetti", "icon": "fas fa-broom fa6"},
-    {"name": "Articoli per l'imballaggio", "slug": "articoli-per-limballaggio",
-     "icon": "fa-solid fa-box-open-full fa6"},
-    {"name": "Articoli per la spedizione", "slug": "articoli-per-la-spedizione", "icon": "fas fa-boxes-packing fa6"},
-    {"name": "Accessori per l'archiviazione", "slug": "accessori-per-larchiviazione",
-     "icon": "fa-solid fa-shelves fa6"},
-    {"name": "Portabiglietti da visita", "slug": "portabiglietti-da-visita", "icon": "fas fa-table-cells-large fa6"},
-    {"name": "Pennarelli colorati", "slug": "pennarelli-colorati-scrittura-e-correzione", "icon": "fas fa-pen fa6"},
-    {"name": "Portalistini, portamenù e album fotografici", "slug": "portalistini-portamenu-e-album-fotografici",
-     "icon": "fa-solid fa-book-open-cover fa6"},
-    {"name": "Raccoglitori per documenti", "slug": "raccoglitori-per-documenti", "icon": "fas fa-box-archive fa6"},
-    {"name": "Etichette", "slug": "etichette", "icon": "far fa-note-sticky fa6"}
-]
-
-# menuItemsSlugsToSkip = ['altro']  # Grandparents
-category_slugs_to_skip = ['senza-categoria']
 
 
 def init_parser():
@@ -201,9 +60,6 @@ def flatten_structure(struct):
 
 
 def get_menu_item_id_from_object(needle, object_type="product_cat"):
-    global main_menu_id
-    global menu_items_cache
-
     if needle == 0:
         return 0
 
@@ -232,7 +88,6 @@ def get_menu_item_id_from_object(needle, object_type="product_cat"):
 
 
 def load_menu_items():
-    global main_menu_id
     global menu_items_cache
     # Find the menu item id using the term id (object_id)
     cmd = os.popen(
@@ -245,7 +100,6 @@ def load_menu_items():
 
 
 def add_menu_item(term_id_or_name, name, parent_menu_item_id, position=1, object_type="product_cat"):
-    global main_menu_id
     name = name.replace("'", "\\'")
     if object_type == "product_cat":
         cmd = os.popen(
