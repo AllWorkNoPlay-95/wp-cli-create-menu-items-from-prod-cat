@@ -2,7 +2,7 @@ main_menu_id = "megacategories"
 max_order_position = 999990
 # menuItemsSlugsToSkip = ['altro']  # Grandparents
 category_slugs_to_skip = ['senza-categoria']
-custom_parents = [  # Parent title: Child slug # TODO: load from external file for modularity
+custom_parents = [  # Parent title: Child slug
     {
         "name": "Altro",
         "custom_order": max_order_position + 1,
@@ -18,7 +18,7 @@ custom_parents = [  # Parent title: Child slug # TODO: load from external file f
     }
 ]
 menu_icons = [
-    # Make the top level menus have an icon (Font Awesome in this case) # TODO: load from external file for modularity
+    # Make the top level menus have an icon (Font Awesome in this case)
     {"name": "Archiviazione", "slug": "archiviazione", "icon": "fa-solid fa-cabinet-filing fa6"},
     {"name": "Buste spedizioni ed etichette", "slug": "buste-spedizioni-ed-etichette", "icon": "fas fa-envelope"},
     {"name": "Cancelleria e ufficio", "slug": "cancelleria-e-ufficio", "icon": "fas fa-paperclip"},
