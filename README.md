@@ -22,7 +22,7 @@ This script generates a navigation structure for WordPress menus (compatible wit
    ```
 2. Ensure the script is executable:
    ```bash
-   chmod +x create_menu.py
+   chmod +x create-menu-items.py
    ```
 3. Run the script with the required options.
 
@@ -39,15 +39,15 @@ Run the script with the following options:
 ### Examples
 - Create a new menu structure from product categories:
   ```bash
-  ./create_menu.py
+  ./create-menu-items.py
   ```
 - Update an existing menu structure:
   ```bash
-  ./create_menu.py -u
+  ./create-menu-items.py -u
   ```
 - Delete all existing menu items and create a new structure:
   ```bash
-  ./create_menu.py --delete-all
+  ./create-menu-items.py --delete-all
   ```
 
 ## Customization
