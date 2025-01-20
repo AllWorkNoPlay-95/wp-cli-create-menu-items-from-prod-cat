@@ -153,7 +153,7 @@ menu_icons = [
 ]
 
 # menuItemsSlugsToSkip = ['altro']  # Grandparents
-categorySlugsToSkip = ['senza-categoria']
+category_slugs_to_skip = ['senza-categoria']
 
 
 def init_parser():
@@ -329,7 +329,7 @@ def make_structure_from_cats(cats):
     # Step 1 - Find parents
     # Fill struct with parents
     for c in cats:
-        if c['slug'] in categorySlugsToSkip:
+        if c['slug'] in category_slugs_to_skip:
             continue
         if c["parent"] == 0:
             c["children"] = []  # Init children here
