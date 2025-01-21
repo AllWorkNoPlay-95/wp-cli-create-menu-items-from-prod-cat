@@ -2,29 +2,19 @@ main_menu_id = "megacategories"
 max_order_position = 999990
 # menuItemsSlugsToSkip = ['altro']  # Grandparents
 category_slugs_to_skip = ['senza-categoria']
+root_menus_classes = "full-width"
+# first_menus_classes = "col-2"
+second_menus_classes = ""
 custom_parents = [  # Parent title: Child slug
-    {
-        "name": "Altro",
-        "custom_order": max_order_position + 1,
-        "children_slugs": [
-            "macchine-per-lufficio",
-            "catering",
-            "sicurezza-e-magazzino",
-            "pulizia-e-igiene",
-            "elettronica-e-informatica",
-            "espositori-e-lavagne",
-            "articoli-diversi"
-        ]
-    }
-]
-menu_icons = [
-    # Make the top level menus have an icon (Font Awesome in this case)
+    {"name": "Altro", "custom_order": max_order_position + 1, "icon": "fas fa-ellipsis-h",
+     "children_slugs": ["macchine-per-lufficio", "catering", "sicurezza-e-magazzino", "pulizia-e-igiene",
+                        "elettronica-e-informatica", "espositori-e-lavagne", "articoli-diversi"]}]
+menu_icons = [  # Make the top level menus have an icon (Font Awesome in this case)
     {"name": "Archiviazione", "slug": "archiviazione", "icon": "fa-solid fa-cabinet-filing fa6"},
     {"name": "Buste spedizioni ed etichette", "slug": "buste-spedizioni-ed-etichette", "icon": "fas fa-envelope"},
     {"name": "Cancelleria e ufficio", "slug": "cancelleria-e-ufficio", "icon": "fas fa-paperclip"},
     {"name": "Carta e cartoncini", "slug": "carta-e-cartoncini", "icon": "fas fa-copy"},
     {"name": "Cartoleria e scuola", "slug": "cartoleria-e-scuola", "icon": "fas fa-school"},
-    {"name": "0", "slug": "0", "icon": "fas fa-ellipsis-h"},
     {"name": "Scrittura e correzione", "slug": "scrittura-e-correzione", "icon": "fas fa-pencil-ruler"},
     {"name": "Macchine per l'ufficio", "slug": "macchine-per-lufficio", "icon": "fas fa-calculator"},
     {"name": "Catering", "slug": "catering", "icon": "fa-solid fa-plate-utensils fa6"},
@@ -73,11 +63,9 @@ menu_icons = [
     {"name": "Carta per il ricalco", "slug": "carta-per-il-ricalco", "icon": "far fa-copy fa6"},
     {"name": "Carta per plotter", "slug": "carta-per-plotter", "icon": "fas fa-tape fa6"},
     {"name": "Articoli da regalo e borse shopper", "slug": "articoli-da-regalo-e-borse-shopper",
-     "icon": "fas fa-gift fa6"},
-    {"name": "Colle", "slug": "colle", "icon": "fas fa-droplet fa6"},
+     "icon": "fas fa-gift fa6"}, {"name": "Colle", "slug": "colle", "icon": "fas fa-droplet fa6"},
     {"name": "Portablocchi, block notes e taccuini", "slug": "portablocchi-block-notes-e-taccuini",
-     "icon": "fa-solid fa-memo-pad fa6"},
-    {"name": "Perforatori", "slug": "perforatori", "icon": "far fa-circle fa6"},
+     "icon": "fa-solid fa-memo-pad fa6"}, {"name": "Perforatori", "slug": "perforatori", "icon": "far fa-circle fa6"},
     {"name": "Giochi, musica, e articoli per l'infanzia", "slug": "giochi-musica-e-articoli-per-linfanzia",
      "icon": "fa-solid fa-teddy-bear fa6"},
     {"name": "Quaderni per la scuola", "slug": "quaderni-per-la-scuola", "icon": "fa-solid fa-notebook fa6"},
@@ -137,5 +125,4 @@ menu_icons = [
     {"name": "Portalistini, portamenù e album fotografici", "slug": "portalistini-portamenu-e-album-fotografici",
      "icon": "fa-solid fa-book-open-cover fa6"},
     {"name": "Raccoglitori per documenti", "slug": "raccoglitori-per-documenti", "icon": "fas fa-box-archive fa6"},
-    {"name": "Etichette", "slug": "etichette", "icon": "far fa-note-sticky fa6"}
-]
+    {"name": "Etichette", "slug": "etichette", "icon": "far fa-note-sticky fa6"}]

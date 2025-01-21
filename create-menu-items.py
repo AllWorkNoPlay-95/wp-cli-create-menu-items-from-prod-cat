@@ -7,7 +7,8 @@ import os
 import json
 import argparse
 from pprint import pprint
-from config import main_menu_id, max_order_position, custom_parents, menu_icons, category_slugs_to_skip
+from config import main_menu_id, max_order_position, custom_parents, menu_icons, category_slugs_to_skip, \
+    root_menus_classes
 
 # Globals
 menu_items_cache = []
@@ -99,38 +100,46 @@ def load_menu_items():
     return menu_items_cache
 
 
-def add_menu_item(term_id_or_name, name, parent_menu_item_id, position=1, object_type="product_cat"):
+def add_menu_item(term_id_or_name, name, parent_menu_item_id, position=1, object_type="product_cat", classes=""):
     name = name.replace("'", "\\'")
+    if not parent_menu_item_id:
+        classes += root_menus_classes
     if object_type == "product_cat":
         cmd = os.popen(
-            "wp menu item add-term {menu_id} product_cat {term_id} --title=\"{name}\" --parent-id={parent_id} --position={pos};".format(
+            "wp menu item add-term {menu_id} product_cat {term_id} --title=\"{name}\" --parent-id={parent_id} --position={pos} --classes=\"{classes}\";".format(
                 menu_id=main_menu_id,
                 term_id=term_id_or_name,
                 parent_id=parent_menu_item_id,
                 name=name,
-                pos=position)
+                pos=position,
+                classes=classes)
         )
     elif object_type == "custom":
         cmd = os.popen(
-            "wp menu item add-custom {menu_id} \"{title}\" \"{link}\" --parent-id={parent_id} --position={pos};".format(
+            "wp menu item add-custom {menu_id} \"{title}\" \"{link}\" --parent-id={parent_id} --position={pos} --classes=\"{classes}\";".format(
                 menu_id=main_menu_id,
                 title=name,
                 link="#",
                 parent_id=parent_menu_item_id,
-                pos=position)
+                pos=position,
+                classes=classes)
         )
     result = cmd.read()
     cmd.close()
     return result
 
 
-def update_menu_item(menu_item_id, name, parent_item_id, position=0):
+def update_menu_item(menu_item_id, name, parent_item_id, position=0, classes=""):
     name = "{}".format(name)  # Use unicode
     name = name.replace("'", "\\'")
-    cmd = "wp menu item update {} --title=\"{}\" --parent-id={} --position={}".format(menu_item_id,
-                                                                                      name,
-                                                                                      parent_item_id,
-                                                                                      position)
+    if not parent_item_id:
+        classes += root_menus_classes
+    cmd = "wp menu item update {} --title=\"{}\" --parent-id={} --position={} --classes=\"{classes}\";".format(
+        menu_item_id,
+        name,
+        parent_item_id,
+        position,
+        classes=classes)
     if args.v:
         print("> {}".format(cmd))
     cmd = os.popen(
@@ -306,13 +315,17 @@ def update_wp_menu_items(struct):
                                                                   si if "custom_order" not in s else s[
                                                                       "custom_order"]))
                     print(add_menu_item(s["term_id"], s["name"], this_parent_menu_item_id,
-                                        si if "custom_order" not in s else s["custom_order"]))
+                                        si if "custom_order" not in s else s["custom_order"],
+                                        classes=next((icon["icon"] for icon in menu_icons if icon["slug"] == s["slug"]),
+                                                     "")))
                 elif s["object"] == "custom":  # Add menu item by custom item
                     print("Adding menu {} (Name:{} #{})...".format(s["name"], "custom",
                                                                    si if "custom_order" not in s else s[
                                                                        "custom_order"]))
                     print(add_menu_item(s["name"], s["name"], this_parent_menu_item_id,
-                                        si if "custom_order" not in s else s["custom_order"], "custom"))
+                                        si if "custom_order" not in s else s["custom_order"], "custom",
+                                        classes=next((icon["icon"] for icon in menu_icons if icon["slug"] == s["slug"]),
+                                                     "")))
 
             else:
                 if args.update_existing:
@@ -330,7 +343,8 @@ def update_wp_menu_items(struct):
                             this_menu_item_id,
                             s['name'],
                             this_parent_menu_item_id,
-                            si if "custom_order" not in s else s["custom_order"])
+                            si if "custom_order" not in s else s["custom_order"],
+                            classes=next((icon["icon"] for icon in menu_icons if icon["slug"] == s["slug"]), ""))
                     )
         else:
             if this_menu_item_id:  # Delete menu item only if exists and count == 0
